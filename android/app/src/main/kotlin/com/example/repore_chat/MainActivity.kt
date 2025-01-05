@@ -1,4 +1,4 @@
-package com.example.repore_chat
+package com.quwaysim.reporechat
 
 import io.flutter.embedding.android.FlutterActivity
 
