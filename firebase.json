@@ -1,0 +1,41 @@
+{
+    "flutter": {
+        "platforms": {
+            "android": {
+                "default": {
+                    "projectId": "repore-chat",
+                    "appId": "1:730467495650:android:af3a3b87738f0ae41778bb",
+                    "fileOutput": "android/app/google-services.json"
+                }
+            },
+            "ios": {
+                "default": {
+                    "projectId": "repore-chat",
+                    "appId": "1:730467495650:ios:10e1c7d578c9eba01778bb",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "ios/Runner/GoogleService-Info.plist"
+                }
+            },
+            "macos": {
+                "default": {
+                    "projectId": "repore-chat",
+                    "appId": "1:730467495650:ios:10e1c7d578c9eba01778bb",
+                    "uploadDebugSymbols": false,
+                    "fileOutput": "macos/Runner/GoogleService-Info.plist"
+                }
+            },
+            "dart": {
+                "lib/firebase_options.dart": {
+                    "projectId": "repore-chat",
+                    "configurations": {
+                        "android": "1:730467495650:android:af3a3b87738f0ae41778bb",
+                        "ios": "1:730467495650:ios:10e1c7d578c9eba01778bb",
+                        "macos": "1:730467495650:ios:10e1c7d578c9eba01778bb",
+                        "web": "1:730467495650:web:ca252c63b3c07dc71778bb",
+                        "windows": "1:730467495650:web:b58032dc82aed6e51778bb"
+                    }
+                }
+            }
+        }
+    }
+}
