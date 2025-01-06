@@ -53,7 +53,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onChanged: widget.onChanged,
       cursorHeight: 16.h,
       obscureText: widget.isPasswordField ? _obscureText : false,
-      maxLines: widget.maxLines,
+      maxLines: widget.isPasswordField ? 1 : widget.maxLines,
       minLines: widget.isPasswordField ? 1 : widget.minLines,
       textCapitalization: widget.textCapitalization,
       onFieldSubmitted: widget.onSubmitted,
