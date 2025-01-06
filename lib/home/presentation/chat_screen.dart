@@ -11,7 +11,9 @@ import 'package:repore_chat/utils/widgets/chat_bubble.dart';
 import 'package:repore_chat/utils/widgets/chat_input.dart';
 
 class ChatScreen extends ConsumerStatefulWidget {
-  const ChatScreen({super.key});
+  const ChatScreen({super.key, required this.groupId});
+
+  final String groupId;
 
   @override
   ConsumerState<ChatScreen> createState() => _ChatScreenState();
