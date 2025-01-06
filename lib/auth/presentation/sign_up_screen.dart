@@ -3,6 +3,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
 import 'package:repore_chat/auth/application/auth_notifier.dart';
 import 'package:repore_chat/auth/application/auth_state.dart';
+import 'package:repore_chat/utils/widgets/custom_button.dart';
 import 'package:repore_chat/utils/widgets/custom_textfield.dart';
 
 class SignUpScreen extends ConsumerStatefulWidget {
@@ -84,31 +85,18 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                 },
               ),
               const Gap(16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: authState == const AuthState.loading()
-                      ? null
-                      : () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            ref.read(authProvider.notifier).signUpWithEmailAndPassword(
-                                  _usernameController.text.trim(),
-                                  _emailController.text.trim(),
-                                  _passwordController.text.trim(),
-                                );
-                          }
-                        },
-                  child: authState.maybeWhen(
-                    loading: () => const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    ),
-                    orElse: () => const Text('Sign up'),
-                  ),
-                ),
+              CustomButton(
+                text: 'Sign up',
+                loading: authState == const AuthState.loading(),
+                onPressed: () {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    ref.read(authProvider.notifier).signUpWithEmailAndPassword(
+                          _usernameController.text.trim(),
+                          _emailController.text.trim(),
+                          _passwordController.text.trim(),
+                        );
+                  }
+                },
               ),
             ],
           ),

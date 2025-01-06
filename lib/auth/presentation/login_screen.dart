@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:repore_chat/auth/application/auth_notifier.dart';
 import 'package:repore_chat/auth/application/auth_state.dart';
 import 'package:repore_chat/auth/presentation/sign_up_screen.dart';
+import 'package:repore_chat/utils/widgets/custom_button.dart';
 import 'package:repore_chat/utils/widgets/custom_textfield.dart';
 
 class LoginScreen extends ConsumerStatefulWidget {
@@ -91,30 +92,17 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
                 },
               ),
               const Gap(16),
-              SizedBox(
-                width: double.infinity,
-                child: ElevatedButton(
-                  onPressed: authState == const AuthState.loading()
-                      ? null
-                      : () {
-                          if (_formKey.currentState?.validate() ?? false) {
-                            ref.read(authProvider.notifier).signInWithEmailAndPassword(
-                                  _emailController.text.trim(),
-                                  _passwordController.text,
-                                );
-                          }
-                        },
-                  child: authState.maybeWhen(
-                    loading: () => const SizedBox(
-                      height: 20,
-                      width: 20,
-                      child: CircularProgressIndicator(
-                        strokeWidth: 2,
-                      ),
-                    ),
-                    orElse: () => const Text('Login'),
-                  ),
-                ),
+              CustomButton(
+                text: 'Login',
+                loading: authState == const AuthState.loading(),
+                onPressed: () {
+                  if (_formKey.currentState?.validate() ?? false) {
+                    ref.read(authProvider.notifier).signInWithEmailAndPassword(
+                          _emailController.text.trim(),
+                          _passwordController.text,
+                        );
+                  }
+                },
               ),
               const Gap(16),
               Row(
