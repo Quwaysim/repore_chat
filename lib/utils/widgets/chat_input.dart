@@ -8,33 +8,18 @@ import 'package:repore_chat/utils/widgets/custom_textfield.dart';
 class ChatInput extends StatefulWidget {
   const ChatInput({
     required this.onSend,
+    required this.textController,
     super.key,
   });
 
-  final void Function(String message) onSend;
+  final void Function() onSend;
+  final TextEditingController textController;
 
   @override
   State<ChatInput> createState() => _ChatInputState();
 }
 
 class _ChatInputState extends State<ChatInput> {
-  final _textController = TextEditingController();
-  bool _canSend = false;
-
-  @override
-  void dispose() {
-    _textController.dispose();
-    super.dispose();
-  }
-
-  void _handleSend() {
-    if (_textController.text.trim().isEmpty) return;
-    widget.onSend(_textController.text.trim());
-    _textController.clear();
-    setState(() {
-      _canSend = false;
-    });
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -58,7 +43,7 @@ class _ChatInputState extends State<ChatInput> {
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: 8.w),
                 child: CustomTextField(
-                  controller: _textController,
+                  controller: widget.textController,
                   minLines: 1,
                   maxLines: 5,
                   hint: 'Send a message...',
@@ -80,7 +65,7 @@ class _ChatInputState extends State<ChatInput> {
                     height: 48.w,
                     child: Center(
                       child: InkWell(
-                        onTap: _canSend ? _handleSend : null,
+                        onTap: widget.onSend,
                         child: SvgPicture.asset(
                           AssetPaths.icSend,
                           height: 24.w,
@@ -89,14 +74,7 @@ class _ChatInputState extends State<ChatInput> {
                       ),
                     ),
                   ),
-                  onChanged: (value) {
-                    setState(() {
-                      _canSend = value.trim().isNotEmpty;
-                    });
-                  },
-                  onSubmitted: (_) {
-                    if (_canSend) _handleSend();
-                  },
+                  
                 ),
               ),
             ),

@@ -120,4 +120,20 @@ class ChatGroupNotifier extends AutoDisposeNotifier<AsyncValue<List<ChatGroup>>>
 
     return memberIds;
   }
+
+  Future<void> addMemberToGroup(String groupId, String memberId) async {
+    try {
+      await _groupsRef.child(groupId).child('members/$memberId').set(true);
+    } catch (e) {
+      state = AsyncValue.error(e, StackTrace.current);
+    }
+  }
+
+  Future<void> removeMemberFromGroup(String groupId, String memberId) async {
+    try {
+      await _groupsRef.child(groupId).child('members/$memberId').remove();
+    } catch (e) {
+      state = AsyncValue.error(e, StackTrace.current);
+    }
+  }
 }

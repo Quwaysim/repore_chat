@@ -24,8 +24,7 @@ mixin _$ChatGroup {
   String get name => throw _privateConstructorUsedError;
   String get createdBy => throw _privateConstructorUsedError;
   DateTime get createdAt => throw _privateConstructorUsedError;
-  Map<String, bool> get members =>
-      throw _privateConstructorUsedError; // userId: true mapping for easy querying
+  Map<String, bool> get members => throw _privateConstructorUsedError;
   String? get lastMessage => throw _privateConstructorUsedError;
   DateTime? get lastMessageTime => throw _privateConstructorUsedError;
 
@@ -214,7 +213,6 @@ class _$ChatGroupImpl implements _ChatGroup {
     return EqualUnmodifiableMapView(_members);
   }
 
-// userId: true mapping for easy querying
   @override
   final String? lastMessage;
   @override
@@ -293,7 +291,7 @@ abstract class _ChatGroup implements ChatGroup {
   @override
   DateTime get createdAt;
   @override
-  Map<String, bool> get members; // userId: true mapping for easy querying
+  Map<String, bool> get members;
   @override
   String? get lastMessage;
   @override
