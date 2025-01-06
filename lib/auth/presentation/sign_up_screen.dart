@@ -92,8 +92,9 @@ class _SignUpScreenState extends ConsumerState<SignUpScreen> {
                       : () {
                           if (_formKey.currentState?.validate() ?? false) {
                             ref.read(authProvider.notifier).signUpWithEmailAndPassword(
+                                  _usernameController.text.trim(),
                                   _emailController.text.trim(),
-                                  _passwordController.text,
+                                  _passwordController.text.trim(),
                                 );
                           }
                         },

@@ -1,32 +1,29 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart' as firebase;
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repore_chat/auth/application/auth_state.dart';
 import 'package:repore_chat/auth/domain/user.dart';
+import 'package:repore_chat/utils/helpers.dart';
 
 final authProvider = NotifierProvider<AuthNotifier, AuthState>(AuthNotifier.new);
 
 class AuthNotifier extends Notifier<AuthState> {
   late final firebase.FirebaseAuth _auth;
+  late final FirebaseFirestore _firestore;
 
   @override
   AuthState build() {
     _auth = firebase.FirebaseAuth.instance;
-    _setupAuthStateListener();
-    return const AuthState.initial();
-  }
-
-  void _setupAuthStateListener() {
+    _firestore = FirebaseFirestore.instance;
     _auth.authStateChanges().listen((user) {
       if (user != null) {
-        try {
-          state = AuthState.authenticated(User.fromFirebase(user));
-        } catch (e) {
-          state = const AuthState.unauthenticated();
-        }
+        state = AuthState.authenticated(User.fromFirebase(user));
       } else {
         state = const AuthState.unauthenticated();
       }
     });
+    return const AuthState.initial();
   }
 
   Future<void> signInWithEmailAndPassword(String email, String password) async {
@@ -43,13 +40,38 @@ class AuthNotifier extends Notifier<AuthState> {
     }
   }
 
-  Future<void> signUpWithEmailAndPassword(String email, String password) async {
+  Future<void> signUpWithEmailAndPassword(String username, String email, String password) async {
     try {
       state = const AuthState.loading();
-      await _auth.createUserWithEmailAndPassword(
+
+      final userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
+      
+      final user = userCredential.user;
+      if (user == null) {
+        debugPrint('Error: User is null after creation');
+        state = AuthState.error(_mapFirebaseError(''));
+        return;
+      }
+
+      await user.updateDisplayName(username);
+
+      final userData = User(
+        id: user.uid,
+        email: email,
+        displayName: username,
+        role: getRoleFromEmail(email),
+      );
+
+      try {
+        await _firestore.collection('users').doc(user.uid).set(userData.toJson());
+      } catch (e) {
+        state = AuthState.error(_mapFirebaseError(e.toString()));
+        return;
+      }
+
     } on firebase.FirebaseAuthException catch (e) {
       state = AuthState.error(_mapFirebaseError(e.code));
     } catch (e) {
@@ -67,20 +89,22 @@ class AuthNotifier extends Notifier<AuthState> {
 
   String _mapFirebaseError(String code) {
     switch (code) {
-      case 'invalid-email':
-        return 'Invalid email address';
-      case 'user-disabled':
-        return 'This user has been disabled';
       case 'user-not-found':
-        return 'No user found with this email';
+        return 'No user found with this email.';
       case 'wrong-password':
-        return 'Wrong password';
-      case 'invalid-credential':
-        return 'Invalid credentials';
+        return 'Wrong password provided.';
       case 'email-already-in-use':
-        return 'Email already in use';
+        return 'The email address is already in use.';
+      case 'invalid-email':
+        return 'The email address is invalid.';
+      case 'operation-not-allowed':
+        return 'Email & Password accounts are not enabled.';
+      case 'weak-password':
+        return 'The password is too weak.';
+      case 'user-creation-failed':
+        return 'Failed to create user account.';
       default:
-        return 'An error occurred. Please try again';
+        return code;
     }
   }
 }
