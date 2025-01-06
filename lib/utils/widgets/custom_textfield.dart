@@ -11,6 +11,12 @@ class CustomTextField extends StatefulWidget {
   final String? Function(String?)? validator;
   final TextInputType? keyboardType;
   final void Function(String)? onChanged;
+  final int? maxLines;
+  final int? minLines;
+  final TextCapitalization textCapitalization;
+  final void Function(String)? onSubmitted;
+  final String? hint;
+  final Color? fillColor;
 
   const CustomTextField({
     super.key,
@@ -22,6 +28,13 @@ class CustomTextField extends StatefulWidget {
     this.validator,
     this.keyboardType,
     this.onChanged,
+    this.maxLines,
+    this.minLines,
+    this.textCapitalization = TextCapitalization.none,
+    this.onSubmitted,
+    this.hint,
+    this.fillColor,
+    
   });
 
   @override
@@ -40,9 +53,20 @@ class _CustomTextFieldState extends State<CustomTextField> {
       onChanged: widget.onChanged,
       cursorHeight: 16.h,
       obscureText: widget.isPasswordField ? _obscureText : false,
+      maxLines: widget.maxLines,
+      minLines: widget.isPasswordField ? 1 : widget.minLines,
+      textCapitalization: widget.textCapitalization,
+      onFieldSubmitted: widget.onSubmitted,
+    
       decoration: InputDecoration(
         contentPadding: const EdgeInsets.fromLTRB(16, 12, 16, 12),
         labelText: widget.isPasswordField ? 'Password' : widget.label,
+        hintText: widget.hint,
+        fillColor: widget.fillColor,
+        hintStyle: TextStyle(
+          color: AppColors.color98A2B3,
+          fontSize: 14.sp,
+        ),
         prefixIcon: widget.isPasswordField ? const Icon(Icons.lock) : widget.prefixIcon,
         suffixIcon: widget.isPasswordField
             ? InkWell(
@@ -66,7 +90,7 @@ class _CustomTextFieldState extends State<CustomTextField> {
           borderRadius: BorderRadius.all(
             Radius.circular(20.w),
           ),
-          borderSide: const BorderSide(color: AppColors.color0071BC),
+          borderSide: const BorderSide(color: AppColors.colorEAECF0),
         ),
         focusedBorder: OutlineInputBorder(
           borderRadius: BorderRadius.all(
