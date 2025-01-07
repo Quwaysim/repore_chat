@@ -4,6 +4,7 @@ import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repore_chat/auth/application/auth_notifier.dart';
 import 'package:repore_chat/chat/domain/chat_message.dart';
+import 'package:repore_chat/utils/enums.dart';
 
 final chatProvider = AutoDisposeNotifierProvider<ChatNotifier, AsyncValue<List<ChatMessage>>>(ChatNotifier.new);
 
@@ -31,7 +32,7 @@ class ChatNotifier extends AutoDisposeNotifier<AsyncValue<List<ChatMessage>>> {
           final messagesMap = event.snapshot.value as Map<dynamic, dynamic>;
           final messages = messagesMap.entries.map((e) {
             final data = Map<String, dynamic>.from(e.value as Map);
-            data['id'] = e.key;
+            data['key'] = e.key;
             return ChatMessage.fromJson(data);
           }).toList();
           messages.sort((a, b) => a.timestamp.compareTo(b.timestamp));
@@ -57,6 +58,8 @@ class ChatNotifier extends AutoDisposeNotifier<AsyncValue<List<ChatMessage>>> {
 
       final timestamp = DateTime.now();
       final senderName = user.displayName ?? user.email;
+
+      final newMessageRef = _messagesRef.push();
       final newMessage = ChatMessage(
         groupId: groupId,
         senderId: user.id,
@@ -64,14 +67,23 @@ class ChatNotifier extends AutoDisposeNotifier<AsyncValue<List<ChatMessage>>> {
         message: message,
         timestamp: timestamp,
         senderRole: user.role,
+        status: Status.waiting,
+        key: newMessageRef.key,
       );
 
-      await _messagesRef.push().set(newMessage.toJson());
+      try {
+        await newMessageRef.set(newMessage.toJson());
+        await newMessageRef.update({'status': Status.sent.name});
 
-      await _groupRef.update({
-        'lastMessage': '$senderName: $message',
-        'lastMessageTime': timestamp.toIso8601String(),
-      });
+        await _groupRef.update({
+          'lastMessage': '$senderName: $message',
+          'lastMessageTime': timestamp.toIso8601String(),
+        });
+      } catch (e) {
+        final failedMessage = newMessage.copyWith(status: Status.resend);
+        state = AsyncValue.data([...state.value ?? [], failedMessage]);
+        rethrow;
+      }
     } catch (e) {
       state = AsyncValue.error(e, StackTrace.current);
     }
