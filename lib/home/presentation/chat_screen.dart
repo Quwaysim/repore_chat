@@ -104,10 +104,11 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
                 }
 
                 return ListView.builder(
+                  reverse: true,
                   padding: EdgeInsets.symmetric(horizontal: 16.w, vertical: 16.h),
                   itemCount: messages.length,
                   itemBuilder: (context, index) {
-                    final message = messages[index];
+                    final message = messages[messages.length - 1 - index];
                     final isMe = message.senderId == currentUser?.id;
 
                     return ChatBubble(
