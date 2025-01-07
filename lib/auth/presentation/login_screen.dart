@@ -4,6 +4,7 @@ import 'package:gap/gap.dart';
 import 'package:repore_chat/auth/application/auth_notifier.dart';
 import 'package:repore_chat/auth/application/auth_state.dart';
 import 'package:repore_chat/auth/presentation/sign_up_screen.dart';
+import 'package:repore_chat/home/presentation/home_screen.dart';
 import 'package:repore_chat/utils/widgets/custom_button.dart';
 import 'package:repore_chat/utils/widgets/custom_textfield.dart';
 
@@ -45,6 +46,11 @@ class _LoginScreenState extends ConsumerState<LoginScreen> {
             SnackBar(
               content: Text('Logged in as ${user.email}'),
               backgroundColor: Colors.green,
+            ),
+          );
+          Navigator.of(context).pushReplacement(
+            MaterialPageRoute(
+              builder: (context) => const HomeScreen(),
             ),
           );
         },

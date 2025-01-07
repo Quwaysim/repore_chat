@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:repore_chat/auth/application/auth_notifier.dart';
+import 'package:repore_chat/auth/presentation/login_screen.dart';
 import 'package:repore_chat/home/application/chat_group_notifier.dart';
 import 'package:repore_chat/home/presentation/create_group_screen.dart';
 import 'package:repore_chat/chat/presentation/chat_screen.dart';
@@ -30,6 +31,11 @@ class HomeScreen extends ConsumerWidget {
             icon: const Icon(Icons.logout, color: Colors.white),
             onPressed: () {
               ref.read(authProvider.notifier).signOut();
+              Navigator.of(context).pushReplacement(
+                MaterialPageRoute(
+                  builder: (context) => const LoginScreen(),
+                ),
+              );
             },
           ),
           IconButton(

@@ -2,11 +2,9 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
-import 'package:repore_chat/auth/application/auth_notifier.dart';
-import 'package:repore_chat/auth/presentation/login_screen.dart';
+import 'package:repore_chat/auth/presentation/splash.dart';
 import 'package:repore_chat/home/application/presence_notifier.dart';
 import 'package:repore_chat/firebase_options.dart';
-import 'package:repore_chat/home/presentation/home_screen.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -30,7 +28,7 @@ class MyApp extends ConsumerWidget {
           useMaterial3: true,
         ),
         home: const AppInit(
-          child: AuthGate(),
+          child: SplashScreen(),
         ),
       ),
     );
@@ -59,19 +57,5 @@ class _AppInitState extends ConsumerState<AppInit> {
   @override
   Widget build(BuildContext context) {
     return widget.child;
-  }
-}
-
-class AuthGate extends ConsumerWidget {
-  const AuthGate({super.key});
-
-  @override
-  Widget build(BuildContext context, WidgetRef ref) {
-    final authState = ref.watch(authProvider);
-
-    return authState.maybeWhen(
-      authenticated: (user) => const HomeScreen(),
-      orElse: () => const LoginScreen(),
-    );
   }
 }
