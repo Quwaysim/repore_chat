@@ -4,7 +4,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_database/firebase_database.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:repore_chat/auth/application/auth_notifier.dart';
-import 'package:repore_chat/chat/domain/chat_group.dart';
+import 'package:repore_chat/home/domain/chat_group.dart';
 
 final chatGroupProvider =
     AutoDisposeNotifierProvider<ChatGroupNotifier, AsyncValue<List<ChatGroup>>>(ChatGroupNotifier.new);
