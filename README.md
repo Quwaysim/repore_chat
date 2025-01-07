@@ -5,6 +5,11 @@ A real-time chat application built with Flutter and Firebase, designed for Repor
 # Overview
 <img width="827" alt="Overview of the structure" src="https://github.com/user-attachments/assets/5b38c3a3-5f2f-4ca6-8631-5f1375ff8a04" />
 
+# Key Flows
+<img width="439" alt="Sending Messages" src="https://github.com/user-attachments/assets/808b3a5e-2241-434f-a399-c162373948d5" />
+<img width="585" alt="Message Status Updates" src="https://github.com/user-attachments/assets/f09333e3-ca5f-452a-8fa8-acdf40e5d905" />
+
+
 # Technical Breakdown
 
 ### Real-time communication using Firebase.
