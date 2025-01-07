@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:gap/gap.dart';
-import 'package:repore_chat/chat/application/chat_group_notifier.dart';
+import 'package:repore_chat/home/application/chat_group_notifier.dart';
 import 'package:repore_chat/utils/widgets/custom_button.dart';
 import 'package:repore_chat/utils/widgets/custom_textfield.dart';
 

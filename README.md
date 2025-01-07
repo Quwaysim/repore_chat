@@ -2,6 +2,32 @@
 
 A real-time chat application built with Flutter and Firebase, designed for Repore's communication needs between admins, support agents, and customers.
 
+# Technical Breakdown
+
+### Real-time communication using Firebase.
+
+- Use of Firebase's Realtime Database for messaging.
+- Messages are stored in a hierarchical structure: messages/groupId/messageId, separated from their group nodes. This makes it easier to fetch groups metadata wihout having to fetch all messages in the group.
+- Each message contains metadata like sender, senderRole, timestamp, and status and are updated in real-time, which makes it easier to update message UI. 
+- Use of Firebase's .onValue listeners to get instant updates
+
+### Differentiating message displays based on user roles.
+
+- Role Assignment:
+For the sake of this demo project, user roles (Admin, Agent and Customer) are determined by email during signup. If the email contains "admin", the user is assigned the admin role. If the email contains "agent", the user is assigned the agent role. Otherwise, the user is assigned the customer role. This is stored in Firestore user profile and in the messages in RTDB. 
+
+When the chat bubble renders, the senderRole gotten from the message metadata is used to determine which color to use for the chat bubble. Side: chat bubbles are aligned to the right for messages sent by the current user and to the left for messages sent by other users.
+
+### Implementing and updating message states.
+
+We have 5 states; Waiting, Sent, Delivered, Read and Resend (failed). The initial status of messages is **Waiting**, and this is when the message is getting sent to the RTDB, usually takes ms. **Sent** is when the message is successfully written to the RTDB, **Delivered** is when the message has been received by the user. This is known by using a listener to detect when an authenticated user opens the app and has made it to the Homescreen, thus updating the status field for all messages in all groups the current user belongs to.
+
+**Read** is when the authenticated user has opened the a specific group. The listener goes ahead and marks the  messages that are "not read" in that group ONLY as **Read**. As for **Resend**, this happens when the call to push the message to the RTDB fails.
+
+### Optimizing the client app for scalability and performance.
+
+The app uses the modular form of development, as the project structure allows for easy reusability of code and separation of concerns, with each feauture housed in its own directory with its peersonal state managers, models, data providers and UI components. New features can be easily added and existing features can be easily refactored or modified, thus making the app more maintainable and scalable.
+
 ## Features
 
 - **Real-time Messaging**: Instant message delivery with status tracking (waiting, sent, delivered, read, failed).
@@ -25,18 +51,24 @@ A real-time chat application built with Flutter and Firebase, designed for Repor
 assets/svgs/
 lib/
 ├── auth/
-│   ├── application/    # Auth state management (provider/notifier)
-│   ├── domain/         # User models
+│   ├── application/    # Auth state management
+│   ├── domain/         # User model
 │   └── presentation/   # Login/Signup screens
 ├── chat/
-│   ├── application/    # Chat & presence management (provider/notifier)
-│   ├── domain/         # Message & group models
-│   └── presentation/   # Chat UI components
+│   ├── application/    # Chat state management
+│   ├── domain/         # Message model
+│   └── presentation/   # Chat screen
 ├── home/
-│   └── presentation/   # Home screen & navigation
-└── utils/
-    ├── widgets/        # Reusable widgets
-    └── helpers.dart    # Utility functions
+│   ├── application/    # Home (Groups and presence) state management
+│   ├── domain/         # Group model
+│   └── presentation/   # Home screen, group creation screen
+├── utils/
+│    ├── widgets/        # Reusable widgets
+│    ├── app_colors.dart # App colors
+│    ├── asset_paths.dart  # Asset paths
+│    ├── enums.dart      # Enums
+│    └── helpers.dart    # Utility functions   
+└── main.dart
 ```
 
 ## Getting Started
