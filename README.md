@@ -2,6 +2,9 @@
 
 A real-time chat application built with Flutter and Firebase, designed for Repore's communication needs between admins, support agents, and customers.
 
+# Overview
+<img width="827" alt="Overview of the structure" src="https://github.com/user-attachments/assets/5b38c3a3-5f2f-4ca6-8631-5f1375ff8a04" />
+
 # Technical Breakdown
 
 ### Real-time communication using Firebase.
