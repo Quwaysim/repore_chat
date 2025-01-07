@@ -8,6 +8,7 @@ import 'package:repore_chat/chat/application/chat_notifier.dart';
 import 'package:repore_chat/utils/app_colors.dart';
 import 'package:repore_chat/utils/asset_paths.dart';
 import 'package:repore_chat/utils/enums.dart';
+import 'package:repore_chat/utils/helpers.dart';
 import 'package:repore_chat/utils/widgets/chat_bubble.dart';
 import 'package:repore_chat/utils/widgets/chat_input.dart';
 
@@ -113,7 +114,7 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
 
                     return ChatBubble(
                       userName: message.senderName,
-                      time: '${message.timestamp.hour}:${message.timestamp.minute}',
+                      time: formatTime(message.timestamp),
                       message: message.message,
                       status: message.status,
                       isMe: isMe,
