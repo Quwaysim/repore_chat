@@ -27,6 +27,7 @@ mixin _$ChatMessage {
   DateTime get timestamp => throw _privateConstructorUsedError;
   Role get senderRole => throw _privateConstructorUsedError;
   Status get status => throw _privateConstructorUsedError;
+  String? get key => throw _privateConstructorUsedError;
 
   /// Serializes this ChatMessage to a JSON map.
   Map<String, dynamic> toJson() => throw _privateConstructorUsedError;
@@ -51,7 +52,8 @@ abstract class $ChatMessageCopyWith<$Res> {
       String message,
       DateTime timestamp,
       Role senderRole,
-      Status status});
+      Status status,
+      String? key});
 }
 
 /// @nodoc
@@ -76,6 +78,7 @@ class _$ChatMessageCopyWithImpl<$Res, $Val extends ChatMessage>
     Object? timestamp = null,
     Object? senderRole = null,
     Object? status = null,
+    Object? key = freezed,
   }) {
     return _then(_value.copyWith(
       groupId: null == groupId
@@ -106,6 +109,10 @@ class _$ChatMessageCopyWithImpl<$Res, $Val extends ChatMessage>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as Status,
+      key: freezed == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String?,
     ) as $Val);
   }
 }
@@ -125,7 +132,8 @@ abstract class _$$ChatMessageImplCopyWith<$Res>
       String message,
       DateTime timestamp,
       Role senderRole,
-      Status status});
+      Status status,
+      String? key});
 }
 
 /// @nodoc
@@ -148,6 +156,7 @@ class __$$ChatMessageImplCopyWithImpl<$Res>
     Object? timestamp = null,
     Object? senderRole = null,
     Object? status = null,
+    Object? key = freezed,
   }) {
     return _then(_$ChatMessageImpl(
       groupId: null == groupId
@@ -178,6 +187,10 @@ class __$$ChatMessageImplCopyWithImpl<$Res>
           ? _value.status
           : status // ignore: cast_nullable_to_non_nullable
               as Status,
+      key: freezed == key
+          ? _value.key
+          : key // ignore: cast_nullable_to_non_nullable
+              as String?,
     ));
   }
 }
@@ -192,7 +205,8 @@ class _$ChatMessageImpl implements _ChatMessage {
       required this.message,
       required this.timestamp,
       required this.senderRole,
-      this.status = Status.sent});
+      required this.status,
+      this.key});
 
   factory _$ChatMessageImpl.fromJson(Map<String, dynamic> json) =>
       _$$ChatMessageImplFromJson(json);
@@ -210,12 +224,13 @@ class _$ChatMessageImpl implements _ChatMessage {
   @override
   final Role senderRole;
   @override
-  @JsonKey()
   final Status status;
+  @override
+  final String? key;
 
   @override
   String toString() {
-    return 'ChatMessage(groupId: $groupId, senderId: $senderId, senderName: $senderName, message: $message, timestamp: $timestamp, senderRole: $senderRole, status: $status)';
+    return 'ChatMessage(groupId: $groupId, senderId: $senderId, senderName: $senderName, message: $message, timestamp: $timestamp, senderRole: $senderRole, status: $status, key: $key)';
   }
 
   @override
@@ -233,13 +248,14 @@ class _$ChatMessageImpl implements _ChatMessage {
                 other.timestamp == timestamp) &&
             (identical(other.senderRole, senderRole) ||
                 other.senderRole == senderRole) &&
-            (identical(other.status, status) || other.status == status));
+            (identical(other.status, status) || other.status == status) &&
+            (identical(other.key, key) || other.key == key));
   }
 
   @JsonKey(includeFromJson: false, includeToJson: false)
   @override
   int get hashCode => Object.hash(runtimeType, groupId, senderId, senderName,
-      message, timestamp, senderRole, status);
+      message, timestamp, senderRole, status, key);
 
   /// Create a copy of ChatMessage
   /// with the given fields replaced by the non-null parameter values.
@@ -265,7 +281,8 @@ abstract class _ChatMessage implements ChatMessage {
       required final String message,
       required final DateTime timestamp,
       required final Role senderRole,
-      final Status status}) = _$ChatMessageImpl;
+      required final Status status,
+      final String? key}) = _$ChatMessageImpl;
 
   factory _ChatMessage.fromJson(Map<String, dynamic> json) =
       _$ChatMessageImpl.fromJson;
@@ -284,6 +301,8 @@ abstract class _ChatMessage implements ChatMessage {
   Role get senderRole;
   @override
   Status get status;
+  @override
+  String? get key;
 
   /// Create a copy of ChatMessage
   /// with the given fields replaced by the non-null parameter values.

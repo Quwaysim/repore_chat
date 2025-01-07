@@ -13,7 +13,8 @@ class ChatMessage with _$ChatMessage {
     required String message,
     required DateTime timestamp,
     required Role senderRole,
-    @Default(Status.sent) Status status,
+    required Status status,
+    String? key,
   }) = _ChatMessage;
 
   factory ChatMessage.fromJson(Map<String, dynamic> json) => _$ChatMessageFromJson(json);

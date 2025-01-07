@@ -89,22 +89,14 @@ class AuthNotifier extends Notifier<AuthState> {
 
   String _mapFirebaseError(String code) {
     switch (code) {
-      case 'user-not-found':
-        return 'No user found with this email.';
-      case 'wrong-password':
-        return 'Wrong password provided.';
       case 'email-already-in-use':
         return 'The email address is already in use.';
-      case 'invalid-email':
+      case 'invalids-email':
         return 'The email address is invalid.';
-      case 'operation-not-allowed':
-        return 'Email & Password accounts are not enabled.';
-      case 'weak-password':
-        return 'The password is too weak.';
-      case 'user-creation-failed':
-        return 'Failed to create user account.';
+      case 'invalid-credential':
+        return 'Invalid login details provided.';
       default:
-        return code;
+        return capitalizeFirstLetter(code.replaceAll('-', ' '));
     }
   }
 }

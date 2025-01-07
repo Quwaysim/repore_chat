@@ -14,8 +14,8 @@ _$ChatMessageImpl _$$ChatMessageImplFromJson(Map<String, dynamic> json) =>
       message: json['message'] as String,
       timestamp: DateTime.parse(json['timestamp'] as String),
       senderRole: $enumDecode(_$RoleEnumMap, json['senderRole']),
-      status:
-          $enumDecodeNullable(_$StatusEnumMap, json['status']) ?? Status.sent,
+      status: $enumDecode(_$StatusEnumMap, json['status']),
+      key: json['key'] as String?,
     );
 
 Map<String, dynamic> _$$ChatMessageImplToJson(_$ChatMessageImpl instance) =>
@@ -27,6 +27,7 @@ Map<String, dynamic> _$$ChatMessageImplToJson(_$ChatMessageImpl instance) =>
       'timestamp': instance.timestamp.toIso8601String(),
       'senderRole': _$RoleEnumMap[instance.senderRole]!,
       'status': _$StatusEnumMap[instance.status]!,
+      'key': instance.key,
     };
 
 const _$RoleEnumMap = {
