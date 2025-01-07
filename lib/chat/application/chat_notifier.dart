@@ -14,6 +14,7 @@ class ChatNotifier extends AutoDisposeNotifier<AsyncValue<List<ChatMessage>>> {
   late final DatabaseReference _messagesRef;
   late final DatabaseReference _groupRef;
   StreamSubscription<DatabaseEvent>? _messagesSubscription;
+  StreamSubscription<DatabaseEvent>? _presenceSubscription;
 
   @override
   AsyncValue<List<ChatMessage>> build() {
@@ -25,6 +26,12 @@ class ChatNotifier extends AutoDisposeNotifier<AsyncValue<List<ChatMessage>>> {
     this.groupId = groupId;
     _messagesRef = _database.ref().child('messages').child(groupId);
     _groupRef = _database.ref().child('groups').child(groupId);
+
+    _setupMessageListener();
+    _setupMessageStatusUpdateListener();
+  }
+
+  void _setupMessageListener() {
     _messagesSubscription?.cancel();
     _messagesSubscription = _messagesRef.orderByChild('timestamp').onValue.listen(
       (event) {
@@ -43,6 +50,34 @@ class ChatNotifier extends AutoDisposeNotifier<AsyncValue<List<ChatMessage>>> {
       },
       onError: (error) => state = AsyncValue.error(error, StackTrace.current),
     );
+  }
+
+  void _setupMessageStatusUpdateListener() {
+    final user = ref.read(authProvider).maybeWhen(
+          authenticated: (user) => user,
+          orElse: () => null,
+        );
+
+    if (user == null) return;
+
+    _presenceSubscription?.cancel();
+
+    _presenceSubscription = _messagesRef.onValue.listen((event) {
+      if (event.snapshot.value != null) {
+        final messagesMap = event.snapshot.value as Map<dynamic, dynamic>;
+
+        for (final entry in messagesMap.entries) {
+          final message = Map<String, dynamic>.from(entry.value as Map);
+          final status = message['status'] as String?;
+
+          if (status == Status.sent.name && message['senderId'] != user.id) {
+            _messagesRef.child(entry.key).update({
+              'status': Status.delivered.name,
+            });
+          }
+        }
+      }
+    });
   }
 
   Future<void> sendMessage(String message) async {

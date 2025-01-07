@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:flutter_screenutil/flutter_screenutil.dart';
 import 'package:flutter_svg/svg.dart';
+import 'package:firebase_database/firebase_database.dart';
 import 'package:repore_chat/auth/application/auth_notifier.dart';
 import 'package:repore_chat/chat/application/chat_notifier.dart';
 import 'package:repore_chat/utils/app_colors.dart';
 import 'package:repore_chat/utils/asset_paths.dart';
+import 'package:repore_chat/utils/enums.dart';
 import 'package:repore_chat/utils/widgets/chat_bubble.dart';
 import 'package:repore_chat/utils/widgets/chat_input.dart';
 
@@ -33,11 +35,39 @@ class _ChatScreenState extends ConsumerState<ChatScreen> {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
       ref.read(chatProvider.notifier).startListening(widget.groupId);
+      _markMessagesAsRead();
     });
+  }
+
+  void _markMessagesAsRead() {
+    final user = ref.read(authProvider).maybeWhen(
+          authenticated: (user) => user,
+          orElse: () => null,
+        );
+
+    if (user == null) return;
+
+    final messages = ref.read(chatProvider).value ?? [];
+    for (final message in messages) {
+      if (message.senderId != user.id && message.status != Status.read) {
+        FirebaseDatabase.instance
+            .ref()
+            .child('messages')
+            .child(widget.groupId)
+            .child(message.key ?? '')
+            .update({'status': Status.read.name});
+      }
+    }
   }
 
   @override
   Widget build(BuildContext context) {
+    ref.listen(chatProvider, (previous, next) {
+      if (next.hasValue) {
+        _markMessagesAsRead();
+      }
+    });
+
     final currentUser = ref.watch(authProvider).maybeWhen(
           authenticated: (user) => user,
           orElse: () => null,
